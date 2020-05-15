@@ -1,5 +1,6 @@
 import React from 'react';
 import fetch from 'node-fetch';
+import './app.css';
 import Header from './components/Header';
 import Content from './components/Content';
 
@@ -9,26 +10,66 @@ class App extends React.PureComponent {
 
     this.state = {
       hackerData: this.props.list.hits,
-      pageNum: 1,
+      pageNum: 0,
     };
   }
 
-  nextHackerDataRequest = () => {
-    const url = `https://hn.algolia.com/api/v1/search?hitsPerPage=50&page=${this.state.pageNum}`;
-    fetch(url)
-      .then(res => res.json())
-      .then((data) => {
-        this.setState({
-          hackerData: data.hits,
-          pageNum: this.state.pageNum + 1
+  componentDidMount() {
+    this.getData();
+  }
 
+  getData = () => {
+    const data = this.getLocalStorageData();
+    if (data) {
+      this.setState({ hackerData: data });
+    } else {
+      this.setState({ hackerData: this.props.list.hits });
+    }
+  }
+
+  getLocalStorageData = () => localStorage.getItem('hackerData') && JSON.parse(localStorage.getItem('hackerData'))[this.state.pageNum];
+
+  setLocalStorageData = () => {
+    let hackerdata = {};
+    if (localStorage.getItem('hackerData')) {
+      hackerdata = JSON.parse(localStorage.getItem('hackerData'));
+    }
+    hackerdata[this.state.pageNum] = this.state.hackerData;
+    localStorage.setItem('hackerData', JSON.stringify(hackerdata));
+  }
+
+  nextHackerDataRequest = () => {
+    this.setState({ pageNum: this.state.pageNum + 1 }, () => {
+      const data = this.getLocalStorageData();
+      if (data) {
+        this.setState({ hackerData: this.getLocalStorageData() });
+        return;
+      }
+      const url = `https://hn.algolia.com/api/v1/search?hitsPerPage=50&page=${this.state.pageNum}`;
+      fetch(url)
+        .then(res => res.json())
+        .then((data) => {
+          this.setState({
+            hackerData: data.hits,
+          });
         });
-      });
+      history.pushState('', '', `home?page=${this.state.pageNum}`);
+    });
+  }
+
+  upVote = (objectID) => {
+    const newhackerdata = this.state.hackerData.map((fact) => {
+      if (fact.objectID === objectID) {
+        fact.points += 1;
+      }
+      return fact;
+    });
+    this.setState({ hackerData: newhackerdata }, () => this.setLocalStorageData());
   }
 
   deleteRow = (objectID) => {
     const newhackerdata = this.state.hackerData.filter(fact => fact.objectID !== objectID);
-    this.setState({ hackerData: newhackerdata });
+    this.setState({ hackerData: newhackerdata }, () => this.setLocalStorageData());
   }
 
   render() {
@@ -39,6 +80,7 @@ class App extends React.PureComponent {
         <Content
           list={hackerData}
           deleteRow={this.deleteRow}
+          upVote={this.upVote}
         />
         <input id="moreBtn" type="button" value="more" onClick={this.nextHackerDataRequest} />
       </React.Fragment>

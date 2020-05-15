@@ -1,7 +1,7 @@
 import React from 'react';
+import './style.css';
 
-
-export default class Row extends React.PureComponent {
+export default class Row extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,18 +10,8 @@ export default class Row extends React.PureComponent {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.fact !== this.props.fact) {
-      this.setState({
-        fact: newProps.fact
-      });
-    }
-  }
-
-  upVote = () => {
-    const newfact = { ...this.state.fact };
-    newfact.points += 1;
     this.setState({
-      fact: newfact
+      fact: newProps.fact
     });
   }
 
@@ -33,7 +23,7 @@ export default class Row extends React.PureComponent {
         <td>
           {fact.points}
           {' '}
-          <input type="button" value="&#x25B2;" onClick={this.upVote} />
+          <input type="button" value="&#x25B2;" onClick={() => this.props.upVote(this.state.fact.objectID)} />
         </td>
         <td>
           {fact.title}

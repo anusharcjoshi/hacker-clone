@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
-import Logo from '../../../assets/logo.png';
+// import Logo from '../../../../public/logo.png';
 import './style.css';
 
 const Header = () => (
   <Fragment>
     <div className="header">
-      <img src={Logo} alt="logo" />
+      <img src="/public/logo.png" alt="logo" />
     </div>
   </Fragment>
 );
