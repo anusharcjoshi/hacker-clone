@@ -1,26 +1,18 @@
 import React from 'react';
 import './style.css';
+import Row from './Row';
 
 const Content = (props) => {
-  const { list } = props;
+  const { list, deleteRow } = props;
   return (
     <React.Fragment>
       <table>
-        {list && list.map((facts, i) => (
-          facts.num_comments && (
-            <tr key={i}>
-              <td>{facts.num_comments}</td>
-              <td>{facts.points}</td>
-              <td>
-                {facts.title}
-                {' '}
-                by
-                {' '}
-                {facts.author}
-              </td>
-            </tr>
-          )
+        {list && list.map(fact => (
+          fact.num_comments
+            && <Row fact={fact} deleteRow={deleteRow} />
         ))}
+
+
       </table>
     </React.Fragment>
   );
