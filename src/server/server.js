@@ -27,15 +27,16 @@ app.use('/', (req, res) => {
           console.log(err);
           return res.status(500).send('some error');
         }
-        console.log('serevr', hackerData);
+        // console.log('serevr', hackerData);
         const html = ReactDOMServer.renderToString(<App list={hackerData} />);
-        console.log(`html is >>>>>>>>>>>>>>>>>>>>>> ${html}`);
+        // console.log(`html is >>>>>>>>>>>>>>>>>>>>>> ${html}`);
         fileData = fileData.replace('<div id="root"></div>', `<div id="root">${html}</div><script>window.__INITIAL_PROPS__ = ${JSON.stringify(hackerData)}</script>`);
-        console.log(`fileData is >>>>>>>>>>>>>>>>>>>>>> ${fileData}`);
+        // console.log(`fileData is >>>>>>>>>>>>>>>>>>>>>> ${fileData}`);
         res.send(fileData);
         return null;
       });
-    });
+    })
+    .catch(err => console.log(err));
 });
 
 // app.use('/', (req, res) => {
