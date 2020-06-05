@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-// import Logo from '../../../../public/logo.png';
 import './style.css';
 
 const Header = () => (

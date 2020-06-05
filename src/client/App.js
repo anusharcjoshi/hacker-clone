@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 import './app.css';
 import Header from './components/Header';
 import Content from './components/Content';
+import MyChart from './components/Graph';
+
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -76,13 +78,18 @@ class App extends React.PureComponent {
     const { hackerData } = this.state;
     return (
       <React.Fragment>
-        <Header />
-        <Content
-          list={hackerData}
-          deleteRow={this.deleteRow}
-          upVote={this.upVote}
-        />
-        <input id="moreBtn" type="button" value="more" onClick={this.nextHackerDataRequest} />
+        <div className="mainContainer">
+          <Header />
+          <Content
+            list={hackerData}
+            deleteRow={this.deleteRow}
+            upVote={this.upVote}
+          />
+          <input id="moreBtn" type="button" value="More" onClick={this.nextHackerDataRequest} />
+          <div className="graphContainer">
+            <MyChart list={hackerData} />
+          </div>
+        </div>
       </React.Fragment>
     );
   }
