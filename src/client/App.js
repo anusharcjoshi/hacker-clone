@@ -45,6 +45,7 @@ class App extends React.PureComponent {
       const data = this.getLocalStorageData();
       if (data) {
         this.setState({ hackerData: this.getLocalStorageData() });
+        history.pushState('', '', `home?page=${this.state.pageNum}`);
         return;
       }
       const url = `https://hn.algolia.com/api/v1/search?hitsPerPage=50&page=${this.state.pageNum}`;
